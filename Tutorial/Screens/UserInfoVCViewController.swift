@@ -6,6 +6,15 @@
 //
 
 import UIKit
+import SafariServices
+
+
+protocol useritemInfoDelegate: class {
+    
+    func didTapGithubProfile(for user: User)
+    func didTapGetFollowers(for user: User)
+    
+}
 
 class UserInfoVCViewController: UIViewController {
 
@@ -39,12 +48,12 @@ class UserInfoVCViewController: UIViewController {
             switch result {
             case .success(let user):
                 DispatchQueue.main.async{
+                    let repoVC = GFRepoItemVCViewController(user: user)
+                                    repoVC.delegate = self  // Set the delegate here
                     self.add(childVC: GFUserInfoHeaderVC(user: user), to: self.headerView)
-                    self.add(childVC: GFRepoItemVCViewController(user: user), to: self.itemViewOne)
+                    self.add(childVC: repoVC, to: self.itemViewOne)
                     self.add(childVC: GFFollowerItemVC(user:user), to: self.itemViewTwo)
-                    self.dateLabel.text = "Date Joined : \(user.createdAt.convertToDisplayFormat())"
-                    print("Adding GFUserInfoHeaderVC to headerView")
-
+                    self.dateLabel.text = "\(user.createdAt)"
                 }
                 print(user)
             case .failure(let user):
@@ -52,10 +61,17 @@ class UserInfoVCViewController: UIViewController {
             }
         }
     }
+    
+    func configureUiElements(with user:User){
+        
+        
+       
+        
+    }
     func layoutUI(){
         
         itemView = [headerView,itemViewOne,itemViewTwo,dateLabel]
-
+        
         let padding: CGFloat    = 20
         let itemHeight: CGFloat = 140
         
@@ -94,8 +110,22 @@ class UserInfoVCViewController: UIViewController {
     @objc func dismissVC(){
         dismiss(animated: true)
     }
+}
+
+extension UserInfoVCViewController: useritemInfoDelegate{
+    func didTapGithubProfile(for user: User) {
+        print("name2")
+        guard let url =  URL(string: user.htmlUrl) else {
+            presentGFAlertOnMainThread(title: "Invalid URL", message: "The url attached to this user is invalid.", buttonTitle: "Ok")
+        return
+        }
+        presentSF(with: url)
+    }
     
-
-   
-
+    func didTapGetFollowers(for user: User) {
+        
+    }
+    
+    
+    
 }

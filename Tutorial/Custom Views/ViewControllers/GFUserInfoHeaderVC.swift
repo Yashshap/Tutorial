@@ -18,9 +18,9 @@ class GFUserInfoHeaderVC: UIViewController {
     let bio               = GFBodyLabel(textAlignment: .left)
 
     
-    var user: user!
+    var user: User!
     
-    init(user: user!) {
+    init(user: User!) {
         super.init(nibName: nil, bundle: nil)
         self.user = user
     }

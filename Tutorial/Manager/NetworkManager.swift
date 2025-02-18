@@ -59,7 +59,7 @@ import UIKit
          
      }
     
-     func getUserInfo(for username: String, completed: @escaping (Result<user, GFError>)-> Void){
+     func getUserInfo(for username: String, completed: @escaping (Result<User, GFError>)-> Void){
          
          let endPoint = baseUrl + "users/\(username)"
 
@@ -89,7 +89,7 @@ import UIKit
              do{
                  let decoder = JSONDecoder()
                  decoder.keyDecodingStrategy = .convertFromSnakeCase
-                 let user = try decoder.decode(user.self, from: data)
+                 let user = try decoder.decode(User.self, from: data)
                  completed(.success(user))
              }
              catch{
